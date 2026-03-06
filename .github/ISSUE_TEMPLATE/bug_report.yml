@@ -1,0 +1,42 @@
+name: Bug report
+description: Report a defect in report generation, filtering, or export behavior.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Clear description of the issue.
+      placeholder: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include exact command(s), auth context, and environment.
+      placeholder: |
+        1. Run `pwsh .\PS-E5_tenant_overview.ps1`
+        2. Authenticate to Graph/Exchange
+        3. Observe...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      placeholder: What should have happened?
+    validations:
+      required: true
+  - type: input
+    id: powershell_version
+    attributes:
+      label: PowerShell version
+      placeholder: e.g. 7.4.2
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error output / logs
+      render: shell

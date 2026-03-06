@@ -1,0 +1,16 @@
+# PowerShell and editor artifacts
+*.log
+*.tmp
+*.bak
+
+# Report outputs
+AD_E5_Users_Report_*.csv
+E5_License_Report_*.csv
+
+# Module and cache folders (local)
+.vscode/
+.idea/
+
+# OS files
+Thumbs.db
+Desktop.ini

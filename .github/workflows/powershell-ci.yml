@@ -1,0 +1,49 @@
+name: PowerShell CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install PSScriptAnalyzer
+        shell: pwsh
+        run: Install-Module PSScriptAnalyzer -Scope CurrentUser -Force
+
+      - name: Parse check scripts
+        shell: pwsh
+        run: |
+          $files = @("E5_Report.ps1", "PS-E5_tenant_overview.ps1")
+          $failed = $false
+          foreach ($file in $files) {
+            $tokens = $null
+            $errors = $null
+            [System.Management.Automation.Language.Parser]::ParseFile($file, [ref]$tokens, [ref]$errors) | Out-Null
+            if ($errors.Count -gt 0) {
+              Write-Host "Parse errors in $file"
+              $errors | ForEach-Object { Write-Host " - $($_.Message) at line $($_.Extent.StartLineNumber)" }
+              $failed = $true
+            }
+          }
+          if ($failed) { throw "Parser validation failed." }
+
+      - name: Lint scripts
+        shell: pwsh
+        run: |
+          $files = @("E5_Report.ps1", "PS-E5_tenant_overview.ps1")
+          $issues = @()
+          foreach ($file in $files) {
+            $issues += Invoke-ScriptAnalyzer -Path $file -Severity Error,Warning
+          }
+          if ($issues.Count -gt 0) {
+            $issues | Format-Table RuleName, Severity, ScriptName, Line, Message -AutoSize | Out-String | Write-Host
+            throw "PSScriptAnalyzer reported issues."
+          }
