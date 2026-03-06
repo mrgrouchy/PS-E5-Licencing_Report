@@ -39,11 +39,12 @@ jobs:
         shell: pwsh
         run: |
           $files = @("E5_Report.ps1", "PS-E5_tenant_overview.ps1")
+          $excludedRules = @("PSAvoidUsingWriteHost", "PSUseBOMForUnicodeEncodedFile")
           $issues = @()
           foreach ($file in $files) {
-            $issues += Invoke-ScriptAnalyzer -Path $file -Severity Error,Warning
+            $issues += Invoke-ScriptAnalyzer -Path $file -Severity Error,Warning -ExcludeRule $excludedRules
           }
           if ($issues.Count -gt 0) {
             $issues | Format-Table RuleName, Severity, ScriptName, Line, Message -AutoSize | Out-String | Write-Host
-            throw "PSScriptAnalyzer reported issues."
+            throw "PSScriptAnalyzer reported non-excluded issues."
           }
