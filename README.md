@@ -118,4 +118,4 @@ Please use the issue templates for bugs/feature requests and submit pull request
 
 ## License
 
-No license file is currently defined in this repository. Add one (for example MIT) before sharing outside your organization.
+This project is licensed under the terms in the [LICENSE](LICENSE) file.
